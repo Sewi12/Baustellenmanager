@@ -88,22 +88,7 @@ for update to authenticated
 using (public.bm_is_org_admin(id))
 with check (public.bm_is_org_admin(id));
 
--- Mitgliedschaften verwalten: nur Owner/Admin.
-create policy "bm_memberships_insert_admin"
-on public.bm_memberships
-for insert to authenticated
-with check (public.bm_is_org_admin(organization_id));
 
-create policy "bm_memberships_update_admin"
-on public.bm_memberships
-for update to authenticated
-using (public.bm_is_org_admin(organization_id))
-with check (public.bm_is_org_admin(organization_id));
-
-create policy "bm_memberships_delete_admin"
-on public.bm_memberships
-for delete to authenticated
-using (public.bm_is_org_admin(organization_id));
 
 commit;
 
