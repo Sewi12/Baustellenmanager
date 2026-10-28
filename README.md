@@ -1,47 +1,38 @@
-# Baustellenmanager – Starter 0.2
+# Baustellenmanager – Starter 0.3
 
-Responsives Next.js-Grundgerüst für PC und iPad mit Supabase Auth (E-Mail/Passwort). Dieses Paket ist ein Entwicklungsstarter, keine fertig deployte App.
+Dieses ZIP ist ein Entwicklungsgrundgerüst, keine produktionsfertige App.
 
-## Wichtige Sicherheitsregeln
-
-- Noch keine SQL-Migration in Supabase ausführen. Die Migrationen sind Entwürfe und müssen vor Production nochmals gemeinsam geprüft und getestet werden.
-- Dieses Paket verwendet Tabellen mit dem Präfix `bm_`, um die bestehenden Tabellen von Baustellenzeit nicht zu verändern.
-- Es wird kein Supabase-Service-Role-Schlüssel im Browser benötigt oder mitgeliefert. Niemals einen solchen Schlüssel in GitHub eintragen.
-- Der erste `owner` und die Mitarbeitereinladungen sind noch nicht eingerichtet. Keine offene Registrierung aktivieren.
-- Die Migrationen sind nicht idempotent (Policies/Tabellen können bei erneuter Ausführung Fehler auslösen). Vor einem Einsatz braucht es ein sauberes Migration-/Testverfahren.
+## Aktueller Stand
+- Login-Grundgerüst mit Supabase Auth
+- Server- und Browser-Client über `@supabase/ssr`
+- Middleware prüft die Auth-Sitzung und verweigert Zugriff, wenn die Supabase-Konfiguration fehlt
+- Projektübersicht ist derzeit nur ein Platzhalter
 
 ## Voraussetzungen
-
-- Node.js 20.9 oder neuer
-- npm
-- bestehendes Supabase-Projekt, auf das die App später gezielt konfiguriert wird
+- Node.js und npm
+- Ein bestehendes Supabase-Projekt
+- Umgebungsvariablen aus `.env.example`
 
 ## Lokal starten
-
-1. Ordner entpacken.
+1. ZIP entpacken.
 2. Im Ordner `baustellenmanager` eine Kopie von `.env.example` als `.env.local` anlegen.
-3. In `.env.local` die Supabase Project URL und den öffentlichen Publishable-/Anon-Key eintragen.
-4. Im Ordner eine Eingabeaufforderung öffnen und `npm install` ausführen.
-5. `npm run dev` ausführen.
-6. `http://localhost:3000` öffnen.
+3. Die Supabase-URL und den öffentlichen Publishable-/Anon-Key lokal in `.env.local` eintragen.
+4. `npm install`
+5. `npm run dev`
 
-Für die reine Anzeige kann die Startseite ohne Supabase-Konfiguration aufrufbar sein. Die Login-Funktion benötigt gültige Supabase-Umgebungsvariablen.
+Niemals einen `service_role`-Schlüssel in `.env.local` für den Browser, in GitHub oder in eine `NEXT_PUBLIC_`-Variable eintragen.
 
-## Verzeichnis
+## Datenbank-Sicherheit – WICHTIG
+Die SQL-Dateien unter `supabase/migrations` sind weiterhin Entwürfe und wurden nicht als vollständiges, getestetes Migrationspaket freigegeben.
+Sie dürfen nicht in der produktiven Supabase-Datenbank ausgeführt werden, bis Tabellenrechte, RLS-Policies, Ersteinrichtung des ersten `owner` und die Admin-Einladungsfunktion gemeinsam geprüft und getestet wurden.
 
-- `src/app/login`: Login-Oberfläche und Server Action
-- `src/lib/supabase`: Supabase SSR-Clients
-- `supabase/migrations`: Entwürfe für die `bm_`-Tabellen und RLS
+Das bestehende Supabase-Projekt enthält weitere Apps. Änderungen für den Baustellenmanager müssen ausschließlich `bm_`-Objekte betreffen und dürfen keine bestehenden Tabellen, Benutzer oder Daten verändern.
 
-## Noch nicht enthalten
+## Noch nicht implementiert
+- sichere Ersteinrichtung des ersten Administrators
+- serverseitiger Endpunkt zum Einladen von Mitarbeitern
+- Prüfung der Baustellenmanager-Mitgliedschaft und Rollen nach dem Login
+- Projekte, Pläne, Pins, Aufgaben, Erinnerungen und Dateiablage
+- automatisierte Tests der Zugriffsrechte
 
-- initiale Owner-Einrichtung
-- Admin-Funktion zum Einladen von Mitarbeitern
-- private Storage-Buckets und Datei-Policies
-- Projekte, PDF-Pläne, Pins, Aufgaben und Erinnerungen
-- handschriftliche Besprechungsnotizen und E-Mail-Updates
-- automatisierte Sicherheits- und Zugriffstests
-
-## Hinweis
-
-Da dieses Projekt das bestehende Supabase-Projekt teilen soll, müssen Auth-Benutzer, Tabellenrechte und RLS vor dem produktiven Einsatz sorgfältig geprüft werden. Bestehende Tabellen und Daten dürfen nicht verändert werden.
+Vor einem produktiven Einsatz sind diese Punkte umzusetzen und zu testen.
