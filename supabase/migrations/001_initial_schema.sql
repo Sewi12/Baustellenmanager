@@ -1,4 +1,3 @@
-
 -- Baustellenmanager
 -- Migration 001: Mandanten, Mitgliedschaften und Projekte
 -- Diese Datei ist nur für die Versionsverwaltung.
@@ -18,13 +17,7 @@ create table public.bm_memberships (
     user_id uuid not null
         references auth.users(id) on delete cascade,
     role text not null default 'member'
-        check (role in (
-            'owner',
-            'admin',
-            'site_manager',
-            'member',
-            'external'
-        )),
+        check (role in ('owner', 'admin', 'site_manager', 'member', 'external')),
     created_at timestamptz not null default now(),
     primary key (organization_id, user_id)
 );
