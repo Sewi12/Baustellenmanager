@@ -1,38 +1,30 @@
-# Baustellenmanager – Starter 0.3
+# Baustellenmanager – GitHub Pages Starter 1.0
 
-Dieses ZIP ist ein Entwicklungsgrundgerüst, keine produktionsfertige App.
+Statische PWA mit React/Vite und Supabase Auth. Für GitHub Pages; kein Vercel und kein lokaler Entwicklungsserver für die normale Nutzung erforderlich.
 
-## Aktueller Stand
-- Login-Grundgerüst mit Supabase Auth
-- Server- und Browser-Client über `@supabase/ssr`
-- Middleware prüft die Auth-Sitzung und verweigert Zugriff, wenn die Supabase-Konfiguration fehlt
-- Projektübersicht ist derzeit nur ein Platzhalter
+## GitHub-Einrichtung
+1. Repository muss `Baustellenmanager` heißen und den Branch `main` verwenden.
+2. Repository → Settings → Pages → Build and deployment: **GitHub Actions** auswählen.
+3. Repository → Settings → Secrets and variables → Actions → Variables: folgende Repository Variables anlegen:
+   - `VITE_SUPABASE_URL` = vollständige Project URL, z. B. `https://<project-ref>.supabase.co`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY` = öffentlicher `sb_publishable_...` Key
+4. Den gesamten Inhalt dieses Pakets in das Repository übernehmen und committen. `.env.local` NICHT hochladen.
+5. Unter Actions den Workflow „Deploy Baustellenmanager to GitHub Pages“ prüfen.
 
-## Voraussetzungen
-- Node.js und npm
-- Ein bestehendes Supabase-Projekt
-- Umgebungsvariablen aus `.env.example`
+## Supabase-Einstellungen
+Authentication → URL Configuration:
+- Site URL: später die veröffentlichte GitHub-Pages-Adresse eintragen.
+- Redirect URLs zusätzlich: `https://<github-benutzer>.github.io/Baustellenmanager/` sowie für lokale Tests `http://localhost:5173/`.
+Die echte GitHub-Adresse nach dem ersten Deployment einsetzen. Supabase erlaubt Recovery-Redirects nur, wenn sie in der Allow List stehen.
 
-## Lokal starten
-1. ZIP entpacken.
-2. Im Ordner `baustellenmanager` eine Kopie von `.env.example` als `.env.local` anlegen.
-3. Die Supabase-URL und den öffentlichen Publishable-/Anon-Key lokal in `.env.local` eintragen.
-4. `npm install`
-5. `npm run dev`
+## Passwort-Reset
+Die App verwendet Supabase JS im Browser. Der Recovery-Link führt zur GitHub-Pages-App; Supabase erkennt die Recovery-Session über die URL und `updateUser({ password })` setzt das Passwort.
 
-Niemals einen `service_role`-Schlüssel in `.env.local` für den Browser, in GitHub oder in eine `NEXT_PUBLIC_`-Variable eintragen.
+## Update-Ablauf
+Jeder Commit auf `main` löst automatisch einen neuen GitHub-Pages-Build aus. Der Service Worker erkennt eine wartende Version und zeigt „Neue Version verfügbar“ / „Update downloaden“.
 
-## Datenbank-Sicherheit – WICHTIG
-Die SQL-Dateien unter `supabase/migrations` sind weiterhin Entwürfe und wurden nicht als vollständiges, getestetes Migrationspaket freigegeben.
-Sie dürfen nicht in der produktiven Supabase-Datenbank ausgeführt werden, bis Tabellenrechte, RLS-Policies, Ersteinrichtung des ersten `owner` und die Admin-Einladungsfunktion gemeinsam geprüft und getestet wurden.
-
-Das bestehende Supabase-Projekt enthält weitere Apps. Änderungen für den Baustellenmanager müssen ausschließlich `bm_`-Objekte betreffen und dürfen keine bestehenden Tabellen, Benutzer oder Daten verändern.
-
-## Noch nicht implementiert
-- sichere Ersteinrichtung des ersten Administrators
-- serverseitiger Endpunkt zum Einladen von Mitarbeitern
-- Prüfung der Baustellenmanager-Mitgliedschaft und Rollen nach dem Login
-- Projekte, Pläne, Pins, Aufgaben, Erinnerungen und Dateiablage
-- automatisierte Tests der Zugriffsrechte
-
-Vor einem produktiven Einsatz sind diese Punkte umzusetzen und zu testen.
+## Sicherheit
+- Nur Publishable Key im Browser verwenden. Niemals `service_role` oder Secret Key.
+- GitHub Variables sind für die öffentliche URL und den Publishable Key ausreichend; diese Werte sind öffentlich verwendbar, RLS muss alle Daten schützen.
+- Die Migrationen aus dem bisherigen Next.js-Prototyp wurden absichtlich nicht übernommen. Die bisherigen `bm_`-Migrationen sind noch Entwürfe und müssen separat geprüft werden. Vorhandene Supabase-Tabellen und Daten bleiben unangetastet.
+- Diese Version enthält noch keine Projektverwaltung und keine Datenbankabfragen. Sie ist die statische Auth-/PWA-Basis.

@@ -1,0 +1,10 @@
+{
+  "name": "Baustellenmanager",
+  "short_name": "Baustellenmanager",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f5f9",
+  "theme_color": "#14243a",
+  "icons": []
+}
